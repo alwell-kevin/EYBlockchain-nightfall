@@ -1,0 +1,355 @@
+\documentclass{article}
+
+\usepackage[hints, insection]{minitoc}%for mini table of contents - within each section
+\setcounter{tocdepth}{1} %include sections in main Table of Contents
+\mtcsetdepth{parttoc}{2} %include subsections in `part' Tables of Contents
+\mtcsetdepth{secttoc}{3} %include subsubsections in `section' Tables of Contents
+
+\usepackage{amssymb, amsmath, amsthm, bm}%maths symbols
+
+\usepackage{forest}%for merkle tree drawings
+
+\usepackage{geometry}%page dimensions and borders
+
+\usepackage{graphicx}%for inserting images
+\graphicspath{ {./images/} }%path of images
+
+\usepackage{hyperref}%for hyperlinks:
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,
+    urlcolor=blue,
+}
+\urlstyle{same}
+
+\usepackage{makecell}%for line breaks within a cell of a `tabular'
+
+% \usepackage{enumitem}%allows us to end{enumerate} and then resume where we left off (counter-wise) when re restart: begin{enumerate}[resume]
+\newcounter{ongoingEnumCounter}%will allow us to end and then begin an enumeration again
+
+\usepackage{mdframed}%allows us to colour in the framed boxes (e.g. for warnings)
+
+\usepackage{caption}%allows us to continue figures over more than one page
+\DeclareCaptionLabelFormat{cont}{#1~#2\alph{ContinuedFloat}}
+\captionsetup[ContinuedFloat]{labelformat=cont}
+
+\usepackage{float}%to force a figure to be exactly where I say.
+
+\usepackage[skip=1pt]{caption} % for setting vertical distance between a figure and its caption
+
+\usepackage{listings, xcolor}% for json formatting (bero is optional: just to have a nice mono-spaced font)
+
+\usepackage{booktabs} % for pretty tables
+
+%in rainbow order
+\definecolor{verylightgray}{rgb}{.95,.95,.95}
+\definecolor{lightgray}{rgb}{.7,.7,.7}
+\definecolor{darkgray}{rgb}{.15,.2,.2}
+\definecolor{verylightred}{rgb}{1,0.8,0.8}
+\definecolor{lightorange}{rgb}{1,0.7,0}
+\definecolor{warmyellow}{rgb}{1,0.8,0}
+\definecolor{warmgreen}{rgb}{0.45, 0.8, 0.1}
+\definecolor{turquoise}{rgb}{0,0.75,0.75}
+\definecolor{verylightblue}{rgb}{0.9,0.95,1}
+\definecolor{lightblue}{rgb}{0,0.75,1}
+\definecolor{purple}{rgb}{0.85, 0.5, 0.9}
+
+
+\newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}p{#1}}
+\newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}p{#1}}
+\newcolumntype{R}[1]{>{\raggedleft\let\newline\\\arraybackslash\hspace{0pt}}p{#1}}
+
+% setup javascript formatting
+\lstdefinelanguage{JavaScript}{
+  classoffset=0,
+  morekeywords={break, case, catch, continue, debugger, default, delete, do, else, false, finally, for, if, in, instanceof, new, null, return, switch, this, throw, true, try, typeof, var, let, void, while, with, class, export, boolean, throw, implements, import, this},
+  keywordstyle=\color{purple}\bfseries,
+  classoffset=1,
+  morekeywords={function},%function names
+  keywordstyle=\color{lightblue}\bfseries,
+  classoffset=2,
+  morekeywords={log},
+  keywordstyle=\color{turquoise}\bfseries,
+  classoffset=3,
+  morekeywords={console},
+  keywordstyle=\color{warmyellow}\bfseries,
+  morecomment=[l]{//},
+  morecomment=[s]{/*}{*/},
+  morestring=[b]',
+  morestring=[b]",
+  identifierstyle=\color{white}\bfseries,
+  commentstyle=\color{lightgray}\bfseries,
+  stringstyle=\color{warmgreen}\ttfamily,
+  sensitive=true
+}
+
+\lstset{
+   language=JavaScript,
+   backgroundcolor=\color{darkgray},
+   extendedchars=true,
+   basicstyle=\normalsize\ttfamily\color{white},
+   showstringspaces=false,
+   showspaces=false,
+   numbers=left,
+   numberstyle=\normalsize,
+   numbersep=9pt,
+   tabsize=2,
+   breaklines=true,
+   showtabs=false,
+   captionpos=b
+}
+%end of javascript formatting setup 
+
+
+
+
+% setup solidity formatting
+\lstdefinelanguage{Solidity}{
+  literate=
+     *{0}{{{\color{lightorange}0}}}{1}
+      {1}{{{\color{lightorange}1}}}{1}
+      {2}{{{\color{lightorange}2}}}{1}
+      {3}{{{\color{lightorange}3}}}{1}
+      {4}{{{\color{lightorange}4}}}{1}
+      {5}{{{\color{lightorange}5}}}{1}
+      {6}{{{\color{lightorange}6}}}{1}
+      {7}{{{\color{lightorange}7}}}{1}
+      {8}{{{\color{lightorange}8}}}{1}
+      {9}{{{\color{lightorange}9}}}{1}
+      {=}{{{\color{purple}=}}}{1}
+      {<}{{{\color{purple}<}}}{1}
+      {>}{{{\color{purple}>}}}{1}
+      {==}{{{\color{purple}==}}}{2}
+      {!=}{{{\color{purple}!=}}}{2},
+  classoffset=0,
+  morekeywords={function, mapping, contract, internal, private, public, external, return, returns, if, for, else},
+  keywordstyle=\color{purple}\bfseries,
+  classoffset=1,
+  morekeywords={string, bytes, uint, address, msg, sender, bool, true, false},
+  keywordstyle=\color{lightorange}\bfseries,
+  classoffset=2,
+  morekeywords={emit, require, constructor},
+  keywordstyle=\color{turquoise}\bfseries,
+  morecomment=[l]{//},
+  morecomment=[s]{/*}{*/},
+  morestring=[b]',
+  morestring=[b]",
+  identifierstyle=\color{white}\ttfamily,
+  commentstyle=\color{lightgray}\ttfamily,
+  stringstyle=\color{warmgreen}\ttfamily,
+  sensitive=true
+}
+
+\lstset{
+   language=Solidity,
+   backgroundcolor=\color{darkgray},
+   extendedchars=true,
+   basicstyle=\normalsize\ttfamily\color{white},
+   showstringspaces=false,
+   showspaces=false,
+   numbers=left,
+   numberstyle=\normalsize,
+   numbersep=9pt,
+   tabsize=2,
+   breaklines=true,
+   showtabs=false,
+   captionpos=b
+}
+%end of solidity formatting setup 
+
+
+
+
+
+%setup json formatting:
+\colorlet{numb}{magenta!60!black}
+
+\lstdefinelanguage{json}{
+    basicstyle=\normalfont\ttfamily,
+    numbers=left,
+    numberstyle=\scriptsize,
+    stepnumber=1,
+    numbersep=8pt,
+    showstringspaces=false,
+    breaklines=true,
+    frame=lines,
+    backgroundcolor=\color{darkgray},
+    literate=
+     *{0}{{{\color{warmgreen}0}}}{1}
+      {1}{{{\color{warmgreen}1}}}{1}
+      {2}{{{\color{warmgreen}2}}}{1}
+      {3}{{{\color{warmgreen}3}}}{1}
+      {4}{{{\color{warmgreen}4}}}{1}
+      {5}{{{\color{warmgreen}5}}}{1}
+      {6}{{{\color{warmgreen}6}}}{1}
+      {7}{{{\color{warmgreen}7}}}{1}
+      {8}{{{\color{warmgreen}8}}}{1}
+      {9}{{{\color{warmgreen}9}}}{1}
+      {:}{{{\color{white}{:}}}}{1}
+      {,}{{{\color{white}{,}}}}{1}
+      {\{}{{{\color{white}{\{}}}}{1}
+      {\}}{{{\color{white}{\}}}}}{1}
+      {[}{{{\color{white}{[}}}}{1}
+      {]}{{{\color{white}{]}}}}{1},
+}
+%end of json formatting setup 
+
+\geometry{a4paper, margin=0.5in}%set margins
+
+\usepackage{mathtools}%solely for DeclarePairedDelimiter
+\usepackage{etoolbox}
+\DeclarePairedDelimiter\br{(}{)}
+\delimitershortfall=-0.1pt
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.5em plus10pt minus10pt}
+
+
+%title
+\title{Nightfall \footnotetext{Document prepared by Michael Connor}}
+\date{2019 May}
+\author{Chaitanya Konda, Michael Connor, Duncan Westland,\\
+Quentin Drouot, Paul Brody\\
+\\
+EY Global Blockchain R\&D\\
+}
+
+\bibliographystyle{unsrt}
+\include{macros}
+
+
+% fig.~\ref{fig:name}\\
+% \begin{figure}[H]
+% 	\begin{center}
+% 		\begin{framed}
+%       \begin{tabular}{p{16cm}}			
+%       \end{tabular}
+%     \end{framed}
+%   \end{center}
+%   \caption{Non-Fungible Mint Algorithm}
+%   \label{fig:name}
+% \end{figure}
+
+
+
+\newtheorem{definition}{Definition}
+\newtheorem{theorem}{Theorem}
+
+\begin{document}
+\maketitle %add title to document
+\dosecttoc %declare intention to use 'mini tables of contents (for SECTIONS)' throughout document
+\dosectlof
+\doparttoc %declare intention to use 'mini tables of contents (for PARTS)' throughout document
+%\dominitoc
+%\minitoc - gives table of contents (toc) within a chapter (N/A for this document)
+% \secttoc - gives toc within a section
+% \sectlof - list of figures (lof) within a section
+% \sectlot - list of tables (lot) within a section
+% \parttoc - gives toc within a part
+% \partlof - list of figures (lof) within a part
+% \partlot - list of tables (lot) within a part
+\tableofcontents %add table of contents at this point in the document
+
+
+
+
+
+%%mary:  I'm including each section in a separate file so that latex compiles a bit faster.
+
+\include{introduction/introduction}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newpage
+\part{The Application}
+\label{part:theApplication}
+\parttoc
+
+\newpage
+\include{application/zokrates}
+
+\newpage
+\include{application/trustedSetup}
+
+\newpage
+\include{application/smartContracts}
+
+\newpage
+\include{application/microservices}
+
+\newpage
+\include{application/finiteFieldsAndBitLengths}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newpage
+\part{The Protocols}
+\label{part:theProtocols}
+\parttoc
+
+\newpage
+\section{ERC-721 (non-fungible) tokens}
+\label{sec:721}
+\secttoc
+\mtcskip
+\sectlof
+
+\newpage
+\noindent
+In this section we give an overview of using Nightfall to privately transact non-fungible tokens (nft's). We cover three key functions:
+\begin{itemize}
+	\item Mint - create an initial `token commitment'; a private representation of a public ERC-721 token.
+	\item Transfer - nullify the sender's token commitment, and generate a new token commitment to represent ownership by the receiver.
+	\item Burn - nullify a token commitment, and receive the underlying public ERC-721 token.
+\end{itemize}
+
+\include{protocols/ERC721/variables721}
+
+\newpage
+\include{protocols/ERC721/keymanagement721}
+
+\newpage
+\include{protocols/ERC721/mint721}
+
+\newpage
+\include{protocols/ERC721/transfer721}
+
+\newpage
+\include{protocols/ERC721/burn721}
+
+
+\newpage
+\section{ERC-20 (fungible) Tokens}
+\label{sec:20}
+\secttoc
+\mtcskip
+\sectlof
+
+\noindent
+We recommend reading the \hyperref[sec:721]{ERC-721 (non-fungible) Tokens} protocol first, because non-fungibility makes things simpler.\\
+\\
+In this section we'll give an overview of using Nightfall to privately transact fungible tokens (ft's). We'll cover three key functions:
+\begin{itemize}
+	\item Mint - create an initial `token commitment'; a private representation of a public ERC-20 token.
+	\item Transfer - nullify the sender's token commitment, and generate a new token commitment to represent ownership by the receiver.
+	\item Burn - nullify a token commitment, and receive the underlying public ERC-20 token.
+\end{itemize}
+
+\include{protocols/ERC20/variables20}
+
+\newpage
+\include{protocols/ERC20/keymanagement20}
+
+\newpage
+\include{protocols/ERC20/mint20}
+
+\newpage
+\include{protocols/ERC20/transfer20}
+
+\newpage
+\include{protocols/ERC20/burn20}
+
+\bibliography{misc}
+\end{document}
